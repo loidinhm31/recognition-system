@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
 const App = () => {
     const [studentInfo, setStudentInfo] = useState(null);
@@ -7,9 +7,25 @@ const App = () => {
     const [distance, setDistance] = useState("");
     const [validDistance, setValidDistance] = useState(false);
 
+    useEffect(() => {
+        // Replace these coordinates with your school's coordinates
+        const schoolLatitude = 9.7634156; // Example latitude of school
+        const schoolLongitude = 105.6608275; // Example longitude of school
+        const dist = calculateDistance(
+            parseFloat(latitude),
+            parseFloat(longitude),
+            schoolLatitude,
+            schoolLongitude
+        );
+        setDistance(dist);
+        if (dist <= 0) {
+            // Set validDistance to true if the distance is within 0 km radius of the school
+            setValidDistance(true);
+        }
+    }, [latitude, longitude]);
+
     // Function to calculate distance between two coordinates
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
-        console.log("Calculate distance");
         const R = 6371; // Radius of the earth in km
         const dLat = (lat2 - lat1) * (Math.PI / 180);
         const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -21,13 +37,11 @@ const App = () => {
             Math.sin(dLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const distance = R * c; // Distance in km
-        console.log(distance)
         return distance;
     };
 
     // Function to handle getting user's geolocation
     const getLocation = () => {
-        console.log("Getting location")
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -39,24 +53,6 @@ const App = () => {
                 }
             );
 
-            console.log(latitude)
-            console.log(longitude)
-
-            // Replace these coordinates with your school's coordinates
-            const schoolLatitude = 10.7634156; // Example latitude of school
-            const schoolLongitude = 106.6608275; // Example longitude of school
-            const dist = calculateDistance(
-                parseFloat(latitude),
-                parseFloat(longitude),
-                schoolLatitude,
-                schoolLongitude
-            );
-            console.log(dist)
-            setDistance(dist);
-            if (dist <= 1) {
-                // Set validDistance to true if the distance is within 1 km radius of the school
-                setValidDistance(true);
-            }
         } else {
             console.error('Geolocation is not supported by this browser.');
         }
@@ -65,8 +61,6 @@ const App = () => {
     // Function to handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Handle")
-
     };
 
     // Function to handle form input changes
