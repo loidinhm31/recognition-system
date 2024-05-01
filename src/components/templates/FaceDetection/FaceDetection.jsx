@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { createDetector, STATE } from "../shared/params.js";
-import { Camera } from "../shared/camera.js";
+import { createDetector, STATE } from "../../../shared/params.js";
+import { Camera } from "../../../shared/camera.js";
 import "@mediapipe/face_mesh";
 import "@tensorflow/tfjs-core";
 
@@ -75,7 +75,6 @@ function FaceDetection() {
 
   return (
     <div>
-      <div id="stats"></div>
       <div className="container">
         <div className="canvas-wrapper">
           <canvas id="output" ref={canvasRef}></canvas>

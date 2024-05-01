@@ -1,4 +1,3 @@
-import * as faceMesh from "@mediapipe/face_mesh";
 import * as faceLandmarksDetection from "@tensorflow-models/face-landmarks-detection";
 
 export const NUM_KEYPOINTS = 468;
@@ -45,6 +44,6 @@ export async function createDetector() {
     refineLandmarks: STATE.modelConfig.refineLandmarks,
     triangulateMesh: STATE.modelConfig.triangulateMesh,
     boundingBox: STATE.modelConfig.boundingBox,
-    solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@${faceMesh.VERSION}`,
+    solutionPath: `/node_modules/@mediapipe/face_mesh`,
   });
 }
