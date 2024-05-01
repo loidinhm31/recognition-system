@@ -44,6 +44,6 @@ export async function createDetector() {
     refineLandmarks: STATE.modelConfig.refineLandmarks,
     triangulateMesh: STATE.modelConfig.triangulateMesh,
     boundingBox: STATE.modelConfig.boundingBox,
-    solutionPath: `/node_modules/@mediapipe/face_mesh`
+    solutionPath: `${import.meta.env.BASE_URL}/node_modules/@mediapipe/face_mesh`
   });
 }
