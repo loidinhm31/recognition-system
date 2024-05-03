@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Location(validDistance, setValidDistance) {
+function Location({ setValidDistance }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [distance, setDistance] = useState("");

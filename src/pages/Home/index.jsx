@@ -4,6 +4,7 @@ import Location from "../../components/templates/Location/Location.jsx";
 
 const Home = () => {
   const [studentInfo, setStudentInfo] = useState(null);
+  const [validFaceDetection, setValidFaceDetection] = useState(false);
   const [validDistance, setValidDistance] = useState(false);
 
   // Function to handle form submission
@@ -20,11 +21,13 @@ const Home = () => {
   // Render the form
   return (
     <div>
-      <FaceDetection />
+      {validFaceDetection ? <p>Valid face</p> : <p>Not valid face</p>}
+
+      <FaceDetection setValidFaceDetection={setValidFaceDetection} />
 
       <h1>Student Check-In</h1>
 
-      <Location validDistance={validDistance} setValidDistance={setValidDistance} />
+      <Location setValidDistance={setValidDistance} />
 
       {validDistance ? (
         <form onSubmit={handleSubmit}>
