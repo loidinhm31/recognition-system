@@ -4,11 +4,52 @@ import { Camera } from "../../../shared/camera.js";
 import "@mediapipe/face_mesh";
 import "@tensorflow/tfjs-core";
 
-function FaceDetection() {
+function FaceDetection({ setValidFaceDetection }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [detector, setDetector] = useState(null);
   const [camera, setCamera] = useState(null);
+  const [initialSize, setInitialSize] = useState(null);
+  const [scaleSize, setScaleSize] = useState(null);
+
+  useEffect(() => {
+    if (videoRef && canvasRef) {
+      initApp();
+    }
+    return () => {
+      if (camera) {
+        camera.video.srcObject.getTracks().forEach((track) => track.stop());
+      }
+
+      if (detector) {
+        detector.dispose();
+      }
+    };
+  }, [videoRef, canvasRef]);
+
+  useEffect(() => {
+    if (camera != null && detector !== null) {
+      renderPrediction();
+    }
+  }, [camera, detector]);
+
+  useEffect(() => {
+    if (initialSize !== null && scaleSize !== null) {
+      if (Math.abs(scaleSize - initialSize) > initialSize * 0.1) {
+        setValidFaceDetection(true);
+      }
+    }
+  }, [initialSize]);
+
+  const detectFaceLiveness = (face) => {
+    // Get the initial bounding box initialSize of the first face
+    const currentSize = face.box.width * face.box.height;
+    if (currentSize > 0 && currentSize < 100000) {
+      setInitialSize(currentSize);
+    } else {
+      setScaleSize(currentSize);
+    }
+  };
 
   const renderResult = async () => {
     // Implement renderResult logic
@@ -29,6 +70,12 @@ function FaceDetection() {
       // contain a model that doesn't provide the expected output.
       try {
         faces = await detector.estimateFaces(camera.video, { flipHorizontal: false });
+
+        // Check if faces are detected
+        if (faces && faces.length > 0) {
+          // Face detected
+          detectFaceLiveness(faces[0]);
+        }
       } catch (error) {
         detector.dispose();
         setDetector(null);
@@ -56,25 +103,10 @@ function FaceDetection() {
     setDetector(det);
   };
 
-  useEffect(() => {
-    if (videoRef && canvasRef) {
-      initApp();
-    }
-    return () => {
-      if (camera) {
-        camera.video.srcObject.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [videoRef, canvasRef]);
-
-  useEffect(() => {
-    if (camera != null) {
-      renderPrediction();
-    }
-  }, [camera, detector]);
-
   return (
     <div>
+      <p>{initialSize}</p>
+      <p>{scaleSize}</p>
       <div className="container">
         <div className="canvas-wrapper">
           <canvas id="output" ref={canvasRef}></canvas>
