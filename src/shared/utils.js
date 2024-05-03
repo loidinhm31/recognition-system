@@ -42,7 +42,7 @@ function drawPath(ctx, points, closePath) {
  */
 export function drawResults(ctx, faces, triangulateMesh, boundingBox) {
   faces.forEach((face) => {
-    const keyPoints = face.keypoints.map((keypoint) => [keypoint.x, keypoint.y]);
+    const keypoints = face.keypoints.map((keypoint) => [keypoint.x, keypoint.y]);
 
     if (boundingBox) {
       ctx.strokeStyle = RED;
@@ -67,7 +67,7 @@ export function drawResults(ctx, faces, triangulateMesh, boundingBox) {
 
       for (let i = 0; i < TRIANGULATION.length / 3; i++) {
         const points = [TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1], TRIANGULATION[i * 3 + 2]].map(
-          (index) => keyPoints[index],
+          (index) => keypoints[index],
         );
 
         drawPath(ctx, points, true);
@@ -76,8 +76,8 @@ export function drawResults(ctx, faces, triangulateMesh, boundingBox) {
       ctx.fillStyle = GREEN;
 
       for (let i = 0; i < NUM_KEYPOINTS; i++) {
-        const x = keyPoints[i][0];
-        const y = keyPoints[i][1];
+        const x = keypoints[i][0];
+        const y = keypoints[i][1];
 
         ctx.beginPath();
         ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
@@ -85,27 +85,27 @@ export function drawResults(ctx, faces, triangulateMesh, boundingBox) {
       }
     }
 
-    if (keyPoints.length > NUM_KEYPOINTS) {
+    if (keypoints.length > NUM_KEYPOINTS) {
       ctx.strokeStyle = RED;
       ctx.lineWidth = 1;
 
-      const leftCenter = keyPoints[NUM_KEYPOINTS];
-      const leftDiameterY = distance(keyPoints[NUM_KEYPOINTS + 4], keyPoints[NUM_KEYPOINTS + 2]);
-      const leftDiameterX = distance(keyPoints[NUM_KEYPOINTS + 3], keyPoints[NUM_KEYPOINTS + 1]);
+      const leftCenter = keypoints[NUM_KEYPOINTS];
+      const leftDiameterY = distance(keypoints[NUM_KEYPOINTS + 4], keypoints[NUM_KEYPOINTS + 2]);
+      const leftDiameterX = distance(keypoints[NUM_KEYPOINTS + 3], keypoints[NUM_KEYPOINTS + 1]);
 
       ctx.beginPath();
       ctx.ellipse(leftCenter[0], leftCenter[1], leftDiameterX / 2, leftDiameterY / 2, 0, 0, 2 * Math.PI);
       ctx.stroke();
 
-      if (keyPoints.length > NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS) {
-        const rightCenter = keyPoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS];
+      if (keypoints.length > NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS) {
+        const rightCenter = keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS];
         const rightDiameterY = distance(
-          keyPoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 2],
-          keyPoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 4],
+          keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 2],
+          keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 4],
         );
         const rightDiameterX = distance(
-          keyPoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 3],
-          keyPoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 1],
+          keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 3],
+          keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 1],
         );
 
         ctx.beginPath();
@@ -121,7 +121,7 @@ export function drawResults(ctx, faces, triangulateMesh, boundingBox) {
     for (const [label, contour] of Object.entries(contours)) {
       ctx.strokeStyle = LABEL_TO_COLOR[label];
       ctx.lineWidth = 3;
-      const path = contour.map((index) => keyPoints[index]);
+      const path = contour.map((index) => keypoints[index]);
       if (path.every((value) => value !== undefined)) {
         drawPath(ctx, path, false);
       }

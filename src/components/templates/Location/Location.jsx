@@ -6,6 +6,19 @@ function Location({ setValidDistance }) {
   const [distance, setDistance] = useState("");
 
   useEffect(() => {
+    // Calculate distance between two coordinates
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+      const R = 6371; // Radius of the earth in km
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c; // Distance in km
+      return distance;
+    };
+
     // Replace these coordinates with your school's coordinates
     const schoolLatitude = 9.7634156; // Example latitude of school
     const schoolLongitude = 105.6608275; // Example longitude of school
@@ -15,22 +28,9 @@ function Location({ setValidDistance }) {
       // Set validDistance to true if the distance is within 0 km radius of the school
       setValidDistance(true);
     }
-  }, [latitude, longitude]);
+  }, [latitude, longitude, setValidDistance]);
 
-  // Function to calculate distance between two coordinates
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the earth in km
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
-    return distance;
-  };
-
-  // Function to handle getting user's geolocation
+  // Handle getting user's geolocation
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(

@@ -1,5 +1,5 @@
 import { VIDEO_SIZE } from "./params.js";
-import { isMobile, drawResults } from "./utils.js";
+import { drawResults, isMobile } from "./utils.js";
 
 export class Camera {
   constructor(video, canvas) {
@@ -13,8 +13,9 @@ export class Camera {
    * @param cameraParam From app `STATE.camera`.
    * @param video
    * @param canvas
+   * @param canvasWrapper
    */
-  static async setupCamera(cameraParam, video, canvas) {
+  static async setupCamera(cameraParam, video, canvas, canvasWrapper) {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error("Browser API navigator.mediaDevices.getUserMedia not available");
     }
@@ -56,8 +57,7 @@ export class Camera {
 
     camera.canvas.width = videoWidth;
     camera.canvas.height = videoHeight;
-    const canvasContainer = document.querySelector(".canvas-wrapper");
-    canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`;
+    canvasWrapper.style = `width: ${videoWidth}px; height: ${videoHeight}px`;
 
     // Because the image from camera is mirrored, need to flip horizontally.
     camera.ctx.translate(camera.video.videoWidth, 0);
