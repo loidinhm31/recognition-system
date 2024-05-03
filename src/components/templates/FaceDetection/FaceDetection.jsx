@@ -60,8 +60,12 @@ function FaceDetection({ setValidFaceDetection }) {
 
             // Check if faces are detected
             if (faces && faces.length > 0) {
-              // Face detected
-              detectFaceLiveness(faces[0]);
+              // Face detected, but ensure that just 1 person in the frame
+              if (faces.length === 1) {
+                detectFaceLiveness(faces[0]);
+              } else {
+                setValidFaceDetection(false);
+              }
             }
           } catch (error) {
             detector.dispose();
@@ -93,7 +97,7 @@ function FaceDetection({ setValidFaceDetection }) {
         requestAnimationFrame(renderPrediction);
       };
 
-      renderPrediction()
+      renderPrediction();
     }
   }, [camera, detector]);
 

@@ -16,7 +16,7 @@ export const STATE = {
   backend: "",
   flags: {},
   modelConfig: {
-    maxFaces: 1,
+    maxFaces: 2,
     refineLandmarks: true,
     triangulateMesh: true,
     boundingBox: true,
