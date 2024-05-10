@@ -13,7 +13,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="md:container md:mx-auto">
       <div className="my-3">
         <Button onClick={() => changeTheme()}>
           Change to {theme === "light" ? "Dark" : "Light"}
