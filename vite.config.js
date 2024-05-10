@@ -33,7 +33,7 @@ export default defineConfig({
       ]
     })
   ],
-  base: "/geo-tracking",
+  base: "/check-in-and-tracking",
   build: {
     rollupOptions: {
       plugins: [mediaPipeExportsWorkaround()]
