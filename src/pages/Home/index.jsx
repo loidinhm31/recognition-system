@@ -68,6 +68,7 @@ const Home = () => {
                 <p>You are not within the 1 km radius of the school.</p>
               )}
             </>
+        )}
       </div>
     </div>
   );
