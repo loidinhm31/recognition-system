@@ -1,8 +1,11 @@
+import { Button } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 import FaceDetection from "../../components/templates/FaceDetection/FaceDetection.jsx";
 import { useState } from "react";
 import Location from "../../components/templates/Location/Location.jsx";
 
 const Home = () => {
+  const { theme, setTheme } = useTheme();
   const [studentInfo, setStudentInfo] = useState(null);
   const [validFaceDetection, setValidFaceDetection] = useState(false);
   const [validDistance, setValidDistance] = useState(false);
@@ -17,44 +20,55 @@ const Home = () => {
     const { name, value } = event.target;
     setStudentInfo({ ...studentInfo, [name]: value });
   };
+  const changeTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  };
 
-  // Render the form
   return (
-    <div>
-      <h1>Student Check-In</h1>
+    <div className="md:container md:mx-auto">
+      <div className="my-3">
+        <Button onClick={() => changeTheme()}>
+          Change to {theme === "light" ? "Dark" : "Light"}
+        </Button>
+      </div>
 
-      {validFaceDetection ? <p>Valid face</p> : <p>Not valid face</p>}
+      <div>
+          <h1>Student Check-In</h1>
 
-      <FaceDetection setValidFaceDetection={setValidFaceDetection} />
+          {validFaceDetection ? <p>Valid face</p> : <p>Not valid face</p>}
 
-      {validFaceDetection && (
-        <>
-          <Location setValidDistance={setValidDistance} />
+          <FaceDetection setValidFaceDetection={setValidFaceDetection} />
 
-          {validDistance ? (
-            <form onSubmit={handleSubmit}>
-              <div>
-                <p>You are within the 1 km radius of the school.</p>
-                <label>
-                  Student Name:
-                  <input type="text" name="name" value={studentInfo?.name || ""} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                  Student ID:
-                  <input type="text" name="id" value={studentInfo?.id || ""} onChange={handleInputChange} />
-                </label>
-                <br />
-                <button type="submit">Submit</button>
-              </div>
-            </form>
-          ) : (
-            <p>You are not within the 1 km radius of the school.</p>
-          )}
-        </>
-      )}
+          {validFaceDetection && (
+            <>
+              <Location setValidDistance={setValidDistance} />
 
-
+              {validDistance ? (
+                <form onSubmit={handleSubmit}>
+                  <div>
+                    <p>You are within the 1 km radius of the school.</p>
+                    <label>
+                      Student Name:
+                      <input type="text" name="name" value={studentInfo?.name || ""} onChange={handleInputChange} />
+                    </label>
+                    <br />
+                    <label>
+                      Student ID:
+                      <input type="text" name="id" value={studentInfo?.id || ""} onChange={handleInputChange} />
+                    </label>
+                    <br />
+                    <button type="submit">Submit</button>
+                  </div>
+                </form>
+              ) : (
+                <p>You are not within the 1 km radius of the school.</p>
+              )}
+            </>
+      </div>
     </div>
   );
 };

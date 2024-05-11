@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button } from "@nextui-org/react";
 
 function Location({ setValidDistance }) {
   const [latitude, setLatitude] = useState(null);
@@ -49,7 +50,12 @@ function Location({ setValidDistance }) {
 
   return (
     <>
-      <button onClick={getLocation}>Get Location</button>
+      <Button
+        color="primary" variant="solid"
+        onClick={getLocation}>
+        Get Location
+      </Button>
+
       {latitude && longitude && (
         <div>
           <p>Distance: {distance}</p>
