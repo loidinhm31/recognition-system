@@ -1,10 +1,4 @@
-export const CameraIcon = ({
-                             fill = 'currentColor',
-                             size,
-                             height,
-                             width,
-                             ...props
-                           }) => {
+export const CameraIcon = ({ fill = "currentColor", size, height, width, ...props }) => {
   return (
     <svg
       width={size || width || 24}

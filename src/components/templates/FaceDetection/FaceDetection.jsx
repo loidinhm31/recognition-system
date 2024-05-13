@@ -6,6 +6,7 @@ import "@tensorflow/tfjs-core";
 import { Button, Card, CardHeader, Chip } from "@nextui-org/react";
 import { CheckIcon } from "@/shared/icons/CheckIcon.jsx";
 import { CameraIcon } from "@/shared/icons/CameraIcon.jsx";
+import ContainerCustom from "@/components/atoms/ContainerCustom/index.js";
 
 function FaceDetection({ validFaceDetection, setValidFaceDetection }) {
   const videoRef = useRef(null);
@@ -18,9 +19,7 @@ function FaceDetection({ validFaceDetection, setValidFaceDetection }) {
   const [openCamera, setOpenCamera] = useState(false);
 
   useEffect(() => {
-
     const initApp = async () => {
-
       const cam = await Camera.setupCamera(STATE.camera, videoRef.current, canvasRef.current, canvasWrapperRef.current);
       setCamera(cam);
       setOpenCamera(true);
@@ -120,36 +119,28 @@ function FaceDetection({ validFaceDetection, setValidFaceDetection }) {
   useEffect(() => {
     if (!openCamera) {
       if (camera) {
-        camera.video.srcObject.getTracks().forEach(track => track.stop());
+        camera.video.srcObject.getTracks().forEach((track) => track.stop());
         setCamera(null);
       }
-
     } else {
       if (!camera || (camera && !camera.video.srcObject.active)) {
-        Camera.setupCamera(STATE.camera, videoRef.current, canvasRef.current, canvasWrapperRef.current)
-          .then((camera) => {
+        Camera.setupCamera(STATE.camera, videoRef.current, canvasRef.current, canvasWrapperRef.current).then(
+          (camera) => {
             setCamera(camera);
-          });
+          },
+        );
       }
     }
   }, [openCamera, camera]);
 
   return (
-    <div className="container mx-auto">
+    <ContainerCustom>
       {openCamera ? (
-        <Button
-          className="my-2"
-          variant="solid"
-          color="danger"
-          onClick={() => setOpenCamera(!openCamera)}>
+        <Button className="my-2" variant="solid" color="danger" onClick={() => setOpenCamera(!openCamera)}>
           Close Camera
         </Button>
       ) : (
-        <Button
-          className="my-2"
-          variant="ghost"
-          color="success"
-          onClick={() => setOpenCamera(!openCamera)}>
+        <Button className="my-2" variant="ghost" color="success" onClick={() => setOpenCamera(!openCamera)}>
           Open Camera
         </Button>
       )}
@@ -167,11 +158,11 @@ function FaceDetection({ validFaceDetection, setValidFaceDetection }) {
                 {validFaceDetection ? "Checked Face" : "Checking face"}
               </p>
             </Chip>
-            {!validFaceDetection && <Chip color="warning">
-              <h4 className="text-white font-medium text-large">
-                Move your head closer to and away from the camera
-              </h4>
-            </Chip>}
+            {!validFaceDetection && (
+              <Chip color="warning">
+                <h4 className="text-white font-medium text-large">Move your head closer to and away from the camera</h4>
+              </Chip>
+            )}
           </CardHeader>
         )}
         <div className="mx-auto">
@@ -185,16 +176,15 @@ function FaceDetection({ validFaceDetection, setValidFaceDetection }) {
                 transform: "scaleX(-1)",
                 visibility: "hidden",
                 width: "auto",
-                height: "auto"
+                height: "auto",
               }}
               ref={videoRef}
             ></video>
           </div>
         </div>
       </Card>
-
-    </div>)
-    ;
+    </ContainerCustom>
+  );
 }
 
 export default FaceDetection;

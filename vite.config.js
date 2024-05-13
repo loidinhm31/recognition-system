@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import * as path from "node:path";
-import * as fs from "node:fs";
+import fs from "fs";
+import path from "path";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 function mediaPipeExportsWorkaround() {

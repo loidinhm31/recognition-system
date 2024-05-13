@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
+import ContainerCustom from "@/components/atoms/ContainerCustom/index.js";
 
 function Location({ setValidDistance }) {
   const [latitude, setLatitude] = useState(null);
@@ -49,10 +50,8 @@ function Location({ setValidDistance }) {
   };
 
   return (
-    <>
-      <Button
-        color="primary" variant="solid"
-        onClick={getLocation}>
+    <ContainerCustom>
+      <Button color="primary" variant="solid" onClick={getLocation}>
         Get Location
       </Button>
 
@@ -63,7 +62,7 @@ function Location({ setValidDistance }) {
           <p>Longitude: {longitude}</p>
         </div>
       )}
-    </>
+    </ContainerCustom>
   );
 }
 
