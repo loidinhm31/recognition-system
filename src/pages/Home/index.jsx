@@ -1,9 +1,9 @@
 import { Button } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-import FaceDetection from "../../components/templates/FaceDetection/FaceDetection.jsx";
 import { useState } from "react";
-import Location from "../../components/templates/Location/Location.jsx";
-import ContainerCustom from "../../components/atoms/ContainerCustom/index.js";
+import FaceDetection from "@/components/templates/FaceDetection/FaceDetection.jsx";
+import ContainerCustom from "@/components/atoms/ContainerCustom/index.js";
+import Location from "@/components/templates/Location/Location.jsx";
 
 const Home = () => {
   const { theme, setTheme } = useTheme();
