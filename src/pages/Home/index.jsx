@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import FaceDetection from "../../components/templates/FaceDetection/FaceDetection.jsx";
 import { useState } from "react";
 import Location from "../../components/templates/Location/Location.jsx";
+import ContainerCustom from "../../components/atoms/ContainerCustom/index.js";
 
 const Home = () => {
   const { theme, setTheme } = useTheme();
@@ -29,24 +30,21 @@ const Home = () => {
   };
 
   return (
-    <div className="md:container md:mx-auto">
+    <ContainerCustom>
       <div className="my-3">
-        <Button onClick={() => changeTheme()}>
-          Change to {theme === "light" ? "Dark" : "Light"}
-        </Button>
+        <Button onClick={() => changeTheme()}>Change to {theme === "light" ? "Dark" : "Light"}</Button>
       </div>
 
       <div>
-          <h1>Student Check-In</h1>
+        <h1>Student Check-In</h1>
 
-          {validFaceDetection ? <p>Valid face</p> : <p>Not valid face</p>}
+        <FaceDetection validFaceDetection={validFaceDetection} setValidFaceDetection={setValidFaceDetection} />
 
-          <FaceDetection setValidFaceDetection={setValidFaceDetection} />
+        {validFaceDetection && (
+          <>
+            <Location setValidDistance={setValidDistance} />
 
-          {validFaceDetection && (
-            <>
-              <Location setValidDistance={setValidDistance} />
-
+            <ContainerCustom>
               {validDistance ? (
                 <form onSubmit={handleSubmit}>
                   <div>
@@ -67,10 +65,11 @@ const Home = () => {
               ) : (
                 <p>You are not within the 1 km radius of the school.</p>
               )}
-            </>
+            </ContainerCustom>
+          </>
         )}
       </div>
-    </div>
+    </ContainerCustom>
   );
 };
 

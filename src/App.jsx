@@ -9,7 +9,7 @@ const App = ({ Component, pageProps }) => {
         <Component {...pageProps} />
       </NextThemesProvider>
     </NextUIProvider>
-  )
+  );
 };
 
 export default App;

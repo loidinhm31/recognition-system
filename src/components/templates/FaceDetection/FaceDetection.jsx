@@ -3,8 +3,12 @@ import { createDetector, STATE } from "@/shared/params.js";
 import { Camera } from "@/shared/camera.js";
 import "@mediapipe/face_mesh";
 import "@tensorflow/tfjs-core";
+import { Button, Card, CardHeader, Chip } from "@nextui-org/react";
+import { CheckIcon } from "@/shared/icons/CheckIcon.jsx";
+import { CameraIcon } from "@/shared/icons/CameraIcon.jsx";
+import ContainerCustom from "@/components/atoms/ContainerCustom/index.js";
 
-function FaceDetection({ setValidFaceDetection }) {
+function FaceDetection({ validFaceDetection, setValidFaceDetection }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const canvasWrapperRef = useRef(null);
@@ -12,11 +16,14 @@ function FaceDetection({ setValidFaceDetection }) {
   const [camera, setCamera] = useState(null);
   const [initialSize, setInitialSize] = useState(null);
   const [scaleSize, setScaleSize] = useState(null);
+  const [openCamera, setOpenCamera] = useState(false);
 
   useEffect(() => {
     const initApp = async () => {
       const cam = await Camera.setupCamera(STATE.camera, videoRef.current, canvasRef.current, canvasWrapperRef.current);
       setCamera(cam);
+      setOpenCamera(true);
+
       const det = await createDetector();
       setDetector(det);
     };
@@ -37,7 +44,7 @@ function FaceDetection({ setValidFaceDetection }) {
   }, [videoRef, canvasRef]);
 
   useEffect(() => {
-    if (camera != null && detector !== null) {
+    if (camera !== null && detector !== null) {
       const renderResult = async () => {
         // Implement renderResult logic
         if (camera.video.readyState < 2) {
@@ -99,7 +106,7 @@ function FaceDetection({ setValidFaceDetection }) {
 
       renderPrediction();
     }
-  }, [camera, detector]);
+  }, [camera, detector, setValidFaceDetection]);
 
   useEffect(() => {
     if (initialSize !== null && scaleSize !== null) {
@@ -109,28 +116,74 @@ function FaceDetection({ setValidFaceDetection }) {
     }
   }, [initialSize, scaleSize, setValidFaceDetection]);
 
+  useEffect(() => {
+    if (!openCamera) {
+      if (camera) {
+        camera.video.srcObject.getTracks().forEach((track) => track.stop());
+        setCamera(null);
+      }
+    } else {
+      if (!camera || (camera && !camera.video.srcObject.active)) {
+        Camera.setupCamera(STATE.camera, videoRef.current, canvasRef.current, canvasWrapperRef.current).then(
+          (camera) => {
+            setCamera(camera);
+          },
+        );
+      }
+    }
+  }, [openCamera, camera]);
+
   return (
-    <>
-      <p>{initialSize}</p>
-      <p>{scaleSize}</p>
-      <div className="container">
-        <div className="canvas-wrapper" ref={canvasWrapperRef}>
-          <canvas id="output" ref={canvasRef}></canvas>
-          <video
-            id="video"
-            playsInline
-            style={{
-              WebkitTransform: "scaleX(-1)",
-              transform: "scaleX(-1)",
-              visibility: "hidden",
-              width: "auto",
-              height: "auto",
-            }}
-            ref={videoRef}
-          ></video>
+    <ContainerCustom>
+      {openCamera ? (
+        <Button className="my-2" variant="solid" color="danger" onClick={() => setOpenCamera(!openCamera)}>
+          Close Camera
+        </Button>
+      ) : (
+        <Button className="my-2" variant="ghost" color="success" onClick={() => setOpenCamera(!openCamera)}>
+          Open Camera
+        </Button>
+      )}
+
+      <Card>
+        {openCamera && (
+          <CardHeader className="absolute z-10 top-1 flex-col !items-start">
+            <Chip
+              className="my-1"
+              startContent={validFaceDetection ? <CheckIcon size={18} /> : <CameraIcon size={18} />}
+              variant="faded"
+              color={validFaceDetection ? "success" : "danger"}
+            >
+              <p className="text-tiny text-white/60 uppercase font-bold">
+                {validFaceDetection ? "Checked Face" : "Checking face"}
+              </p>
+            </Chip>
+            {!validFaceDetection && (
+              <Chip color="warning">
+                <h4 className="text-white font-medium text-large">Move your head closer to and away from the camera</h4>
+              </Chip>
+            )}
+          </CardHeader>
+        )}
+        <div className="mx-auto">
+          <div className="canvas-wrapper" ref={canvasWrapperRef}>
+            <canvas id="output" ref={canvasRef}></canvas>
+            <video
+              id="video"
+              playsInline
+              style={{
+                WebkitTransform: "scaleX(-1)",
+                transform: "scaleX(-1)",
+                visibility: "hidden",
+                width: "auto",
+                height: "auto",
+              }}
+              ref={videoRef}
+            ></video>
+          </div>
         </div>
-      </div>
-    </>
+      </Card>
+    </ContainerCustom>
   );
 }
 
