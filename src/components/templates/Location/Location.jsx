@@ -59,14 +59,13 @@ function Location({ setValidDistance, locations }) {
     const location = locations.find((location) => {
       return location.id === Number(k?.currentKey);
     });
-    setSelectedLocation(location)
-  }
+    setSelectedLocation(location);
+  };
 
   return (
     <ContainerCustom>
       {locations && (
         <div className="flex w-full flex-wrap md:flex-nowrap my-3">
-
           <Select
             label="Select a location"
             className="max-w-xs"

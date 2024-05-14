@@ -15,12 +15,11 @@ const retryConfig = {
   retries: 2,
   retryDelay: exponentialDelay,
   retryCondition: shouldRetry,
-  shouldResetTimeout: true
+  shouldResetTimeout: true,
 };
 
 const request = axios.create({
   timeout: 120000,
-
 });
 
 axiosRetry(request, retryConfig);
@@ -30,24 +29,26 @@ const handleError = (error) => {
     const errorMessage = {
       status: "NETWORK_ERROR",
       data: {
-        message: error.message
-      }
+        message: error.message,
+      },
     };
     return errorMessage;
   }
 };
 
-request.interceptors.request.use(async (config) => {
-  if (!config.data?.skipAuth) {
-    config.headers = {
-      ...config.headers
-    };
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
+request.interceptors.request.use(
+  async (config) => {
+    if (!config.data?.skipAuth) {
+      config.headers = {
+        ...config.headers,
+      };
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 request.interceptors.response.use((response) => {
   const statusCode = response?.status || -1;
@@ -56,6 +57,5 @@ request.interceptors.response.use((response) => {
     return response.data;
   }
 }, handleError);
-
 
 export default request;

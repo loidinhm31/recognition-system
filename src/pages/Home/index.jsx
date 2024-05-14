@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     request(`${SCRIPT_URL}`, {
       method: "GET",
-      params: { "action": "location" }
+      params: { action: "location" },
     })
       .then((response) => {
         if (response && response.data) {
@@ -63,10 +63,7 @@ const Home = () => {
 
         {validFaceDetection && (
           <>
-            <Location
-              setValidDistance={setValidDistance}
-              locations={locations}
-            />
+            <Location setValidDistance={setValidDistance} locations={locations} />
 
             <ContainerCustom>
               {validDistance ? (
