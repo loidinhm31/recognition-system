@@ -36,7 +36,7 @@ const Home = () => {
       </div>
 
       <div>
-          <h1>Student Check-In</h1>
+        <h1>Student Check-In</h1>
 
         <FaceDetection validFaceDetection={validFaceDetection} setValidFaceDetection={setValidFaceDetection} />
 
