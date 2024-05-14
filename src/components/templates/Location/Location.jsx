@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Select, SelectItem } from "@nextui-org/react";
 import ContainerCustom from "@/components/atoms/ContainerCustom/index.js";
 
-function Location({ setValidDistance }) {
+function Location({ setValidDistance, locations }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [distance, setDistance] = useState("");
+  const [distance, setDistance] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   useEffect(() => {
     // Calculate distance between two coordinates
@@ -21,16 +22,21 @@ function Location({ setValidDistance }) {
       return distance;
     };
 
-    // Replace these coordinates with your school's coordinates
-    const schoolLatitude = 9.7634156; // Example latitude of school
-    const schoolLongitude = 105.6608275; // Example longitude of school
-    const dist = calculateDistance(parseFloat(latitude), parseFloat(longitude), schoolLatitude, schoolLongitude);
-    setDistance(dist);
-    if (dist <= 0) {
-      // Set validDistance to true if the distance is within 0 km radius of the school
-      setValidDistance(true);
+    if (selectedLocation) {
+      const targetLatitude = selectedLocation?.lat; // Example latitude of school
+      const targetLongitude = selectedLocation?.long; // Example longitude of school
+
+      if (targetLatitude && targetLongitude) {
+        const dist = calculateDistance(parseFloat(latitude), parseFloat(longitude), targetLatitude, targetLongitude);
+        setDistance(dist);
+
+        if (dist <= 0) {
+          // Set validDistance to true if the distance is within 0 km radius of the school
+          setValidDistance(true);
+        }
+      }
     }
-  }, [latitude, longitude, setValidDistance]);
+  }, [latitude, longitude, setValidDistance, selectedLocation]);
 
   // Handle getting user's geolocation
   const getLocation = () => {
@@ -49,8 +55,32 @@ function Location({ setValidDistance }) {
     }
   };
 
+  const findAndSetSelectedLocation = (k) => {
+    const location = locations.find((location) => {
+      return location.id === Number(k?.currentKey);
+    });
+    setSelectedLocation(location)
+  }
+
   return (
     <ContainerCustom>
+      {locations && (
+        <div className="flex w-full flex-wrap md:flex-nowrap my-3">
+
+          <Select
+            label="Select a location"
+            className="max-w-xs"
+            onSelectionChange={(k) => findAndSetSelectedLocation(k)}
+          >
+            {locations.map((location) => (
+              <SelectItem key={location.id} value={location.name}>
+                {location.name}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+      )}
+
       <Button color="primary" variant="solid" onClick={getLocation}>
         Get Location
       </Button>

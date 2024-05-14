@@ -1,15 +1,36 @@
 import { Button } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FaceDetection from "@/components/templates/FaceDetection/FaceDetection.jsx";
 import ContainerCustom from "@/components/atoms/ContainerCustom/index.js";
 import Location from "@/components/templates/Location/Location.jsx";
+import request from "@/core/Request.js";
+import { SCRIPT_URL } from "@/env.js";
 
 const Home = () => {
   const { theme, setTheme } = useTheme();
   const [studentInfo, setStudentInfo] = useState(null);
   const [validFaceDetection, setValidFaceDetection] = useState(false);
   const [validDistance, setValidDistance] = useState(false);
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    request(`${SCRIPT_URL}`, {
+      method: "GET",
+      params: { "action": "location" }
+    })
+      .then((response) => {
+        if (response && response.data) {
+          // Remove header
+          response.data.shift();
+
+          setLocations(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   // Function to handle form submission
   const handleSubmit = (event) => {
@@ -42,7 +63,10 @@ const Home = () => {
 
         {validFaceDetection && (
           <>
-            <Location setValidDistance={setValidDistance} />
+            <Location
+              setValidDistance={setValidDistance}
+              locations={locations}
+            />
 
             <ContainerCustom>
               {validDistance ? (
